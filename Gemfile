@@ -12,6 +12,8 @@ gem 'pg'
 
 group :development, :test do
   gem 'pry'
+  gem 'factory_girl_rails'
+  gem 'rspec-rails'
 end
 
 group :development do
