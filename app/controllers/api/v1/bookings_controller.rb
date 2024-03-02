@@ -1,4 +1,6 @@
 class Api::V1::BookingsController < ApplicationController
+  before_action :get_booking, only: [:show, :update, :destroy]
+
   def index
     bookings = Booking.user_booked_rooms(current_user.id)
     render json: bookings, include: [user: {only: [:first_name, :last_name, :phone_number]}, room: {only: [:room_number]}], status: 200
@@ -14,7 +16,7 @@ class Api::V1::BookingsController < ApplicationController
     end
 
     room_ids.each do |room_id|
-      booking = Booking.new(booking_params)
+      booking = Booking.new(create_booking_params)
       booking.room_id = room_id
       booking.user_id = current_user.id
 
@@ -35,10 +37,20 @@ class Api::V1::BookingsController < ApplicationController
     render json: bookings, status: 200
   end
 
+  def show
+    render json: @booking, status: 200
+  end
+
+  def update
+    unless @booking.update(update_booking_params)
+      return render json: { message: "#{@booking.errors.full_messages.join(" ")}" }
+    end
+    render json: @booking, status: 200
+  end
+
   def destroy
-    booking = Booking.find_by_id(params[:id]&.to_i)
-    booking.room.update_attributes(status: 'available')
-    booking.destroy
+    @booking.room.update_attributes(status: 'available')
+    @booking.destroy
 
     render json: {message: 'Deleted successfully'}, status: 200
   end
@@ -46,7 +58,15 @@ class Api::V1::BookingsController < ApplicationController
   private
 
   # strong parameters
-  def booking_params
+  def create_booking_params
     params.require(:booking).permit(:user_id ,:room_id, :booked_from, :booked_upto)
+  end
+
+  def update_booking_params
+    params.require(:booking).permit(:booked_from, :booked_upto)
+  end
+
+  def get_booking
+    @booking = Booking.find_by_id(params[:id]&.to_i)
   end
 end
