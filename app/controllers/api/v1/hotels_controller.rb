@@ -1,7 +1,7 @@
 class Api::V1::HotelsController < ApplicationController
   def index
     @hotels = Hotel.all
-    render json: @hotels, status: 200
+    render json: @hotels, only: [:id, :name, :email, :phone_number, :stars, :location], status: 200
   end
 
   def search
@@ -11,7 +11,7 @@ class Api::V1::HotelsController < ApplicationController
       @hotels = Hotel.search(hotels_params)
     end
 
-    render json: @hotels, status: 200
+    render json: @hotels, only: [:id, :name, :email, :phone_number, :stars, :location], status: 200
   end
 
   private

@@ -3,7 +3,10 @@ class Api::V1::BookingsController < ApplicationController
 
   def index
     bookings = Booking.user_booked_rooms(current_user.id)
-    render json: bookings, include: [user: {only: [:first_name, :last_name, :phone_number]}, room: {only: [:room_number]}], status: 200
+    render json: bookings, only: [:id, :booked_from, :booked_upto], include: [
+      user: {  only: [:first_name, :last_name, :phone_number] },
+      room: { only: [:room_number] }
+    ], status: 200
   end
 
   def create
@@ -34,18 +37,18 @@ class Api::V1::BookingsController < ApplicationController
       end      
     end
 
-    render json: bookings, status: 200
+    render json: bookings, only: [:id], status: 200
   end
 
   def show
-    render json: @booking, status: 200
+    render json: @booking, only: [:id, :booked_from, :booked_upto], status: 200
   end
 
   def update
     unless @booking.update(update_booking_params)
       return render json: { message: "#{@booking.errors.full_messages.join(" ")}" }
     end
-    render json: @booking, status: 200
+    render json: @booking, only: [:id], status: 200
   end
 
   def destroy
