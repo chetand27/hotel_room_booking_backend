@@ -1,0 +1,20 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  username: postgres
+  password: postgres
+  host: localhost
+  timeout: 5000
+
+development:
+  <<: *default
+  database: hotel_room_booking_system_dev
+
+test:
+  <<: *default
+  database: hotel_room_booking_system_test
+
+# production:
+#   <<: *default
+#   database: hotel_room_booking_system_production
