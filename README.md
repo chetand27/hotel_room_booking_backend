@@ -1,5 +1,5 @@
 == README
-Room Booking System application (1-Sept-2018): In this application you can add your booking for room in different hotels. this repository contains all the backend apis which is integrated in frontend app.
+Room Booking System application (02-March-2024): In this application you can add your booking for room in different hotels. this repository contains all the backend apis which is integrated in frontend app.
 
 Software Requirements:
 
